@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUCU License Card System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="card-app" class="card-app hidden">
+        <!-- Ambient Vignette & Backing (Non-blocking) -->
+        <div class="stage-backdrop"></div>
+
+        <!-- Notification Banner when receiving a card from another citizen -->
+        <div id="incoming-banner" class="incoming-banner hidden">
+            <div class="incoming-icon">🪪</div>
+            <div class="incoming-text">
+                <span class="incoming-sub">DOKUMEN DITUNJUKKAN OLEH</span>
+                <strong id="incoming-sender-name">Citizen</strong>
+            </div>
+        </div>
+
+        <!-- 3D Card Interactive Stage Container -->
+        <div class="card-stage" id="card-stage">
+            <div class="physical-card" id="physical-card">
+                <!-- Holographic Glare Shimmer Layer -->
+                <div class="hologram-glare" id="hologram-glare"></div>
+                <div class="security-guilloche"></div>
+
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="header-authority">
+                        <div class="state-crest">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <div class="authority-text">
+                            <h4 id="card-authority" class="authority-title">PEMERINTAH KOTA BUCU</h4>
+                            <p id="card-department" class="authority-sub">DINAS KEPENDUDUKAN & PENCATATAN SIPIL</p>
+                        </div>
+                    </div>
+                    <div id="card-badge" class="card-badge">KTP</div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <!-- Left: Biometrics, Chip & Seals -->
+                    <div class="card-left-col">
+                        <div class="photo-frame">
+                            <img id="card-avatar-img" class="card-avatar-img" src="images/id_card.png" alt="Cardholder Photo" />
+                            <div id="card-avatar-fallback" class="card-avatar-fallback">BB</div>
+                            <div class="photo-watermark">BUCU OFFICIAL</div>
+                        </div>
+
+                        <!-- EMV Gold Smart Chip -->
+                        <div class="smart-chip">
+                            <div class="chip-circuit"></div>
+                        </div>
+
+                        <!-- Hologram Seal -->
+                        <div class="hologram-seal">
+                            <span class="holo-text">BUCU AUTHENTIC</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Citizen Information Data Fields -->
+                    <div class="card-right-col">
+                        <!-- Primary Document Number (Monospace Embossed) -->
+                        <div class="field-group id-field-group">
+                            <span class="field-label" data-i18n="lbl_citizenid">NOMOR IDENTITAS (CITIZEN ID)</span>
+                            <div id="card-citizenid" class="field-value-mono">#BUCU-121436</div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="field-group">
+                            <span class="field-label" data-i18n="lbl_fullname">NAMA LENGKAP</span>
+                            <div id="card-fullname" class="field-value-name">BUCU BANGET</div>
+                        </div>
+
+                        <!-- Grid 2-columns: DOB, Gender, Nationality -->
+                        <div class="fields-grid-2x2">
+                            <div class="field-group">
+                                <span class="field-label" data-i18n="lbl_dob">TANGGAL LAHIR</span>
+                                <div id="card-dob" class="field-value">1990-01-01</div>
+                            </div>
+                            <div class="field-group">
+                                <span class="field-label" data-i18n="lbl_gender">JENIS KELAMIN</span>
+                                <div id="card-gender" class="field-value">LAKI-LAKI</div>
+                            </div>
+                            <div class="field-group">
+                                <span class="field-label" data-i18n="lbl_nationality">KEWARGANEGARAAN</span>
+                                <div id="card-nationality" class="field-value">SAN ANDREAS</div>
+                            </div>
+                            <div class="field-group">
+                                <span class="field-label" data-i18n="lbl_status">STATUS LEGAL</span>
+                                <div id="card-status" class="status-pill active">RESMI / AKTIF</div>
+                            </div>
+                        </div>
+
+                        <!-- Dates: Issued & Expiry -->
+                        <div class="fields-date-row">
+                            <div class="date-item">
+                                <span class="date-lbl" data-i18n="lbl_issued">TERBIT:</span>
+                                <span id="card-issued" class="date-val">2026-09-01</span>
+                            </div>
+                            <div class="date-item">
+                                <span class="date-lbl" data-i18n="lbl_expires">BERLAKU:</span>
+                                <span id="card-expires" class="date-val highlight">SEUMUR HIDUP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer Barcode & Signatures -->
+                <div class="card-footer">
+                    <div class="footer-barcode-wrap">
+                        <div class="pdf417-barcode"></div>
+                        <span class="barcode-sub" id="card-barcode-text">BC-ID-99210-SA</span>
+                    </div>
+
+                    <div class="footer-signature-wrap">
+                        <div class="signature-line">
+                            <span id="card-signature" class="signature-font">Bucu Banget</span>
+                        </div>
+                        <span class="signature-lbl">Tanda Tangan Pemegang</span>
+                    </div>
+
+                    <div class="footer-official-stamp">
+                        <div class="stamp-circle">
+                            <div class="stamp-inner">
+                                <span>POLICE / CIV</span>
+                                <strong>LEGAL</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Interaction Dock -->
+        <div class="dock-actions">
+            <button id="btn-show-nearby" class="action-btn btn-share" title="Tunjukkan ke warga sekitar (maks 2.5m)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <span>TUNJUKKAN KE WARGA SEKITAR</span>
+            </button>
+
+            <button id="btn-close-card" class="action-btn btn-close" title="Tutup kartu fisik (ESC)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                <span>TUTUP [ESC]</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── Citizen Self-Service Kiosk Modal ───────────────────────────────── -->
+    <div id="kiosk-app" class="kiosk-app hidden">
+        <div class="kiosk-backdrop"></div>
+        <div class="kiosk-modal glass-panel">
+            <div class="kiosk-header">
+                <div class="kiosk-brand">
+                    <div class="kiosk-badge-icon">🏛️</div>
+                    <div class="kiosk-brand-meta">
+                        <span id="kiosk-dept-tag" class="dept-tag">LAYANAN MANDIRI</span>
+                        <h3 id="kiosk-title" class="kiosk-main-title">TERMINAL PERIZINAN & IDENTITAS RESMI</h3>
+                        <p id="kiosk-desc" class="kiosk-sub-title">Cetak atau perbarui dokumen fisik identitas dan izin resmi Anda.</p>
+                    </div>
+                </div>
+                <button id="btn-kiosk-close" class="kiosk-close-btn" title="Tutup (ESC)">✕</button>
+            </div>
+
+            <!-- License Selection Grid -->
+            <div class="kiosk-body">
+                <div class="kiosk-section-label">PILIH DOKUMEN YANG AKAN DITERBITKAN:</div>
+                <div id="kiosk-cards-grid" class="kiosk-cards-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Kiosk Bottom Payment & Action Dock -->
+            <div class="kiosk-footer">
+                <div class="payment-method-wrap">
+                    <span class="pay-lbl">METODE PEMBAYARAN BIAYA ADMINISTRASI:</span>
+                    <div class="pay-options">
+                        <label class="pay-option">
+                            <input type="radio" name="kiosk-pay" value="cash" checked />
+                            <span class="pay-btn">💵 Uang Tunai</span>
+                        </label>
+                        <label class="pay-option">
+                            <input type="radio" name="kiosk-pay" value="bank" />
+                            <span class="pay-btn">🏦 Rekening Bank</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="kiosk-action-group">
+                    <div class="price-summary">
+                        <span class="price-sub">TOTAL BIAYA:</span>
+                        <span id="kiosk-selected-price" class="price-val">$0</span>
+                    </div>
+                    <button id="btn-kiosk-confirm" class="btn-primary-kiosk" disabled>
+                        <span>CETAK DOKUMEN FISIK</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Officer Bureau Console Modal (Police & Gov Staff) ─────────────── -->
+    <div id="officer-app" class="officer-app hidden">
+        <div class="officer-backdrop"></div>
+        <div class="officer-modal glass-panel">
+            <div class="officer-header">
+                <div class="officer-brand">
+                    <div id="officer-dept-icon" class="officer-badge-icon">👮</div>
+                    <div class="officer-brand-meta">
+                        <span id="officer-dept-label" class="officer-dept-tag">BIRO PERIZINAN KEPOLISIAN</span>
+                        <h3 id="officer-title" class="officer-main-title">KONSOL OTORISASI PERIZINAN & DOKUMEN RESMI</h3>
+                        <p id="officer-desc" class="officer-sub-title">Verifikasi identitas warga, terbitkan dokumen baru, atau cabut izin bermasalah.</p>
+                    </div>
+                </div>
+                <button id="btn-officer-close" class="officer-close-btn" title="Tutup (ESC)">✕</button>
+            </div>
+
+            <div class="officer-body-layout">
+                <!-- Left: Nearby Citizens List -->
+                <div class="officer-col-citizens">
+                    <div class="col-head">
+                        <span>WARGA DI SEKITAR LOKET</span>
+                        <button id="btn-refresh-citizens" class="refresh-mini-btn" title="Refresh warga sekitar">🔄</button>
+                    </div>
+                    <div id="officer-citizens-list" class="citizens-list">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: License Issue / Revoke Form -->
+                <div class="officer-col-form">
+                    <div class="form-card-box">
+                        <div class="form-row">
+                            <label class="form-lbl">WARGA TERPILIH:</label>
+                            <div id="officer-selected-citizen-box" class="selected-citizen-display">
+                                <span class="placeholder-text">Pilih warga dari daftar sebelah kiri...</span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-lbl">JENIS DOKUMEN / LISENSI:</label>
+                            <select id="officer-license-select" class="officer-select">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-lbl">CATATAN DINAS & NOMOR REGISTRASI:</label>
+                            <input type="text" id="officer-notes-input" class="officer-input" placeholder="Contoh: Lulus Uji Praktik Berkendara / Lulus Background Check" value="Telah Memenuhi Syarat & Terverifikasi" />
+                        </div>
+
+                        <div class="officer-action-buttons">
+                            <button id="btn-officer-issue" class="btn-officer-issue" disabled>
+                                <span>✔ TERBITKAN DOKUMEN RESMI</span>
+                            </button>
+                            <button id="btn-officer-revoke" class="btn-officer-revoke" disabled>
+                                <span>✖ CABUT LISENSI DARI WARGA</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
